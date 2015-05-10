@@ -40,6 +40,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
     
     //hashmap para almacenar el resultado de la consulta
     HashMap <String,Pokemon> listaPokemons = new HashMap();
+     HashMap <String,Pokemon> evolucionaDe = new HashMap();
     
     /**
      * Creates new form VentanaPokedex
@@ -63,10 +64,23 @@ public class VentanaPokedex extends javax.swing.JFrame {
                 null);
         repaint();
         escribeDatos();
+         
+       
+        
+    }
+    
+    private void modoAutomatico(){
+   if(automatico){
+    tiempoDeVida++;
+    if(tiempoDeVida==1){
+    contador++;
+    }
+    }
     }
     
     private void escribeDatos(){
         Pokemon p = listaPokemons.get(String.valueOf(contador+1));
+        
         
         if (p != null){
             jLabel1.setText("Name:" + p.nombre);
@@ -75,13 +89,27 @@ public class VentanaPokedex extends javax.swing.JFrame {
               jLabel8.setText("Specie: "+p.species);
               jLabel9.setText("Habitat: "+p.habitat);
               jLabel15.setText("Capture range: "+p.rango);
+              
         }
         else {
-            jLabel1.setText("NO HAY DATOS");
+            jLabel1.setText("Name: Unknown");
             jLabel3.setText("¿?");
             jLabel4.setText("¿?");
+             jLabel8.setText("Specie: Unknown");
+             jLabel9.setText("Habitat: Unknown");
+             jLabel15.setText("Capture range: Unknown");
         }
+        
+        Pokemon q = listaPokemons.get(String.valueOf(p.EvolucionDe));
+        if (q != null){
+           
+              jLabel17.setText("Evolves from: "+q.nombre);
+        }else{
+                jLabel17.setText("Evolves from: ----");
+        }
+        
     }
+        
     @Override
     public void paint(Graphics g){
         super.paintComponents(g);
@@ -114,7 +142,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
                 Pokemon p = new Pokemon();
                 p.nombre = resultadoConsulta.getString(2);
                 p.generation_id = resultadoConsulta.getInt(5);
-                p.evolution_chain_id = resultadoConsulta.getInt(6);
+                p.EvolucionDe = resultadoConsulta.getInt(7);
                 p.species = resultadoConsulta.getString(12);
                  p.height = resultadoConsulta.getString(10);
                  p.weight = resultadoConsulta.getString(11);
@@ -128,6 +156,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
         catch (Exception e){
         }
         //////////////////////////////////////////////
+         
         dibujaElPokemonQueEstaEnLaPosicion(0);
         
     }
@@ -156,11 +185,11 @@ public class VentanaPokedex extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -173,25 +202,21 @@ public class VentanaPokedex extends javax.swing.JFrame {
             .addGap(0, 170, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(60, 162, 250, 170);
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 162, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Arial Narrow", 1, 13)); // NOI18N
         jLabel3.setLabelFor(jLabel2);
         jLabel3.setText("11");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(535, 228, 50, 20);
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(535, 228, 50, 20));
 
         jLabel4.setFont(new java.awt.Font("Arial Narrow", 1, 13)); // NOI18N
         jLabel4.setLabelFor(jLabel2);
         jLabel4.setText("11");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(635, 228, 50, 20);
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(635, 228, 50, 20));
 
         jLabel8.setFont(new java.awt.Font("Arial Narrow", 1, 12)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel8);
-        jLabel8.setBounds(460, 466, 90, 40);
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 466, 90, 40));
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("<--");
@@ -200,8 +225,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
                 jLabel5MousePressed(evt);
             }
         });
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(235, 422, 40, 50);
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(235, 422, 40, 50));
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel6.setText("-->");
@@ -210,85 +234,66 @@ public class VentanaPokedex extends javax.swing.JFrame {
                 jLabel6MousePressed(evt);
             }
         });
-        getContentPane().add(jLabel6);
-        jLabel6.setBounds(300, 422, 40, 50);
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 422, 40, 50));
 
         jLabel1.setFont(new java.awt.Font("Arial Narrow", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setLabelFor(jLabel2);
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(455, 175, 160, 30);
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(455, 175, 160, 30));
 
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jLabel7MousePressed(evt);
             }
         });
-        getContentPane().add(jLabel7);
-        jLabel7.setBounds(650, 400, 40, 40);
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 400, 40, 40));
 
         jLabel9.setFont(new java.awt.Font("Arial Narrow", 1, 12)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel9);
-        jLabel9.setBounds(587, 466, 90, 40);
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(587, 466, 90, 40));
 
         jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jLabel10MousePressed(evt);
             }
         });
-        getContentPane().add(jLabel10);
-        jLabel10.setBounds(510, 406, 30, 30);
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 406, 30, 30));
 
         jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jLabel11MousePressed(evt);
             }
         });
-        getContentPane().add(jLabel11);
-        jLabel11.setBounds(468, 406, 40, 30);
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(468, 406, 40, 30));
 
         jLabel12.setText("-10        +10");
-        getContentPane().add(jLabel12);
-        jLabel12.setBounds(470, 440, 80, 16);
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 440, 80, -1));
 
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("Volver");
-        getContentPane().add(jLabel13);
-        jLabel13.setBounds(652, 438, 36, 16);
+        jLabel13.setText("Back");
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(656, 438, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Arial Narrow", 1, 13)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("Final");
+        jLabel14.setText("End");
         jLabel14.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jLabel14MousePressed(evt);
             }
         });
-        getContentPane().add(jLabel14);
-        jLabel14.setBounds(633, 376, 50, 16);
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(633, 376, 50, -1));
 
         jLabel15.setFont(new java.awt.Font("Arial Narrow", 1, 13)); // NOI18N
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel15);
-        jLabel15.setBounds(90, 458, 120, 50);
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 458, 120, 50));
 
-        jLabel16.setFont(new java.awt.Font("Arial Narrow", 1, 13)); // NOI18N
-        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel16.setText("Auto");
-        jLabel16.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel16MousePressed(evt);
-            }
-        });
-        getContentPane().add(jLabel16);
-        jLabel16.setBounds(560, 370, 50, 30);
+        jLabel17.setFont(new java.awt.Font("Arial Narrow", 1, 14)); // NOI18N
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 250, 220, 30));
 
         jLabel2.setFont(new java.awt.Font("Arial Narrow", 0, 12)); // NOI18N
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Pokemon/pokedex.gif"))); // NOI18N
         jLabel2.setLabelFor(this);
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(1, -4, 770, 570);
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, -4, 770, 570));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -333,10 +338,6 @@ public class VentanaPokedex extends javax.swing.JFrame {
        dibujaElPokemonQueEstaEnLaPosicion(contador);
     }//GEN-LAST:event_jLabel14MousePressed
 
-    private void jLabel16MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel16MousePressed
-        automatico = true;
-    }//GEN-LAST:event_jLabel16MousePressed
-
     /**
      * @param args the command line arguments
      */
@@ -380,7 +381,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
